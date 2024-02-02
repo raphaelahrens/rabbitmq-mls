@@ -1,16 +1,10 @@
-# RabbitMQ Message Timestamp Plugin #
+# RabbitMQ MLS Plugin #
 
-This plugin fills the `timestamp` property and `timestamp_in_ms` header of a message as it enters
-RabbitMQ with the current (server node) timestamp value.
+This was an experiment for a Multi Layer Security Plugin for RabbitMQ, curently the plugin does no checks and only logs the information available to the plugin to INFO.
 
 ## Supported RabbitMQ Versions ##
 
 This plugin targets RabbitMQ 3.6.0 and later versions.
-
-## Limitations
-
-This plugin cannot be used together with [rabbitmq-routing-node-stamp](https://github.com/rabbitmq/rabbitmq-routing-node-stamp)
-as they override the same extension point.
 
 ## Installation
 
@@ -35,36 +29,6 @@ rabbitmq-plugins enable rabbitmq_message_timestamp
 
 The plugin will then hook into the `basic.publish` process in order to
 add the current timestamp as seen by the broker.
-
-## Always overwrite timestamps ##
-
-This plugin will not overwrite an existing timestamp on a message. To always
-overwrite, create an `advanced.config` file for RabbitMQ with the following
-content, or add the `rabbitmq_message_timestamp` term to your existing file:
-
-```
-[
-    {rabbitmq_message_timestamp, [
-        {overwrite_timestamps, true}
-    ]}
-].
-```
-
-## Limitations ##
-
-The plugin hooks into the `basic.publish` path, so expect a small
-throughput reduction when using this plugin, since it has to modify
-every message that crosses RabbitMQ.
-
-This plugin should not be enabled at the same time as any other 
-interceptors  that hook into the `basic.publish` process, such as 
-the  `rabbitmq-routing-node-stamp` plugin. Enabling more than one 
-interceptor that is registered to the `basic.publish` process will 
-cause all AMQP 0-9-1 connections to fail when creating a new channel.
-
-If there's enough demand, we could add in the future a way for only
-time-stamping messages that crosses certain exchanges, say by applying
-policies.
 
 ## LICENSE ##
 
